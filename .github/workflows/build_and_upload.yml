@@ -33,9 +33,6 @@ jobs:
 
       # Build the Go binary
       - name: Build
-        run: go build -o http-request-printer
-
-      - name: Build
         run: go build -o http-request-printer -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
 
       # Upload the binary as an artifact
