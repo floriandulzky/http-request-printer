@@ -40,7 +40,7 @@ jobs:
 
       # Upload the binary as an artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: http-request-printer-${{ github.ref_name }}
           path: http-request-printer
