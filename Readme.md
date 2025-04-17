@@ -2,6 +2,8 @@
 
 HTTP Request Printer is a terminal-based application built with [Bubble Tea](https://github.com/charmbracelet/bubbletea) that allows you to start an HTTP server and view incoming HTTP requests in real-time. The app provides a simple interface to inspect request details such as method, URL, headers, and body.
 
+![Screenshot of HTTP Request Printer](assets/screenshot_01.png)
+
 ## Features
 
 - Start an HTTP server on port 8000.
