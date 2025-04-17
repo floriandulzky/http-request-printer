@@ -35,6 +35,15 @@ jobs:
       - name: Build
         run: go build -o http-request-printer -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
 
+      # Upload the binary to the GitHub release
+      - name: Upload to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer
+          asset_name: http-request-printer-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
+
       # Upload the binary as an artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
