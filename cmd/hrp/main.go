@@ -6,8 +6,10 @@ import (
 	"log"
 )
 
+var Version = "development"
+
 func main() {
-	p := tea.NewProgram(view.NewMainScreen(), tea.WithAltScreen())
+	p := tea.NewProgram(view.NewMainScreen(Version), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}

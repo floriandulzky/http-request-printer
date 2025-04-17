@@ -4,6 +4,7 @@ import (
 	"fmt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
 	"github.com/floriandulzky/http-request-printer/internal/model"
 	"github.com/floriandulzky/http-request-printer/internal/view/commands"
 	"sort"
@@ -19,11 +20,13 @@ type mainScreen struct {
 	serverRunning bool
 	windowWidth   int
 	bodyHeight    int
+	version       string
 }
 
-func NewMainScreen() *mainScreen {
+func NewMainScreen(version string) *mainScreen {
 	return &mainScreen{
 		responseChan: make(chan model.HttpRequest),
+		version:      version,
 	}
 }
 
@@ -74,13 +77,26 @@ func (m *mainScreen) View() string {
 		BorderStyle(lipgloss.NormalBorder()).
 		BorderForeground(lipgloss.Color("#fecb3f")).
 		Width(m.windowWidth - 2). // -2 => left and right border
-		Height(m.bodyHeight - 3). // -2 => upper and lower border + footer
+		Height(m.bodyHeight - 4). // -2 => upper and lower border + footer
 		MaxHeight(m.bodyHeight).
 		PaddingLeft(1).PaddingRight(1).
 		AlignVertical(lipgloss.Top)
+	var footer = table.New().
+		Row([]string{
+			fmt.Sprintf("< %d/%d >", m.responseIndex+1, len(m.responses)),
+			m.version}...).
+		Width(m.windowWidth - 4).
+		StyleFunc(func(row, col int) lipgloss.Style {
+			if col == 1 {
+				return lipgloss.NewStyle().Align(lipgloss.Right)
+			}
+			return lipgloss.NewStyle().Align(lipgloss.Left)
+		}).
+		Border(lipgloss.HiddenBorder()).
+		String()
 	if m.serverRunning {
 		if len(m.responses) == 0 {
-			return bodyStyle.Render("Send any http request to port 8000")
+			return bodyStyle.Render("Send any http request to port 8000") + footer
 		}
 		responseBuilder := strings.Builder{}
 		responseBuilder.WriteString(m.responses[m.responseIndex].Method)
@@ -102,8 +118,9 @@ func (m *mainScreen) View() string {
 		responseBuilder.WriteString("\nBody:\n")
 		responseBuilder.WriteString(string(m.responses[m.responseIndex].Body))
 
-		var footerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#fecb3f")).Height(1).MaxHeight(1)
-		return bodyStyle.Render(responseBuilder.String()) + "\n" + footerStyle.Render(fmt.Sprintf("< %d/%d >", m.responseIndex+1, len(m.responses)))
+		return bodyStyle.Render(responseBuilder.String()) +
+			footer
+
 	} else {
 		return bodyStyle.Render(`
 Welcome to
@@ -115,6 +132,6 @@ Welcome to
 |_| |_| |_| |_|
 
 Press Enter to start HTTP Server on port 8000
-`)
+`) + footer
 	}
 }
