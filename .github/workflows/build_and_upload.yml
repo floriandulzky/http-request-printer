@@ -1,9 +1,10 @@
 name: Build and Upload Go Tool
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [created]
+    branches:
+      - main
 
 jobs:
   build:
