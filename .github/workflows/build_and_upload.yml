@@ -6,6 +6,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  checks: write
+  actions: read
+  packages: write
+  repository-projects: read
+  statuses: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
