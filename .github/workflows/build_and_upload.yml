@@ -32,17 +32,92 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      # Build the Go binary
-      - name: Build
-        run: go build -o http-request-printer -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+      # Build the Go binary for Windows amd64
+      - name: Build for Windows amd64
+        run: GOOS=windows GOARCH=amd64 go build -o http-request-printer-windows-amd64.exe -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
 
-      # Upload the binary to the GitHub release
-      - name: Upload to GitHub Release
+      # Build the Go binary for Windows arm64
+      - name: Build for Windows arm64
+        run: GOOS=windows GOARCH=arm64 go build -o http-request-printer-windows-arm64.exe -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+
+      # Build the Go binary for Linux amd64
+      - name: Build for Linux amd64
+        run: GOOS=linux GOARCH=amd64 go build -o http-request-printer-linux-amd64 -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+
+      # Build the Go binary for Linux arm64
+      - name: Build for Linux arm64
+        run: GOOS=linux GOARCH=arm64 go build -o http-request-printer-linux-arm64 -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+
+      # Build the Go binary for macOS amd64
+      - name: Build for macOS amd64
+        run: GOOS=darwin GOARCH=amd64 go build -o http-request-printer-darwin-amd64 -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+
+      # Build the Go binary for macOS arm64
+      - name: Build for macOS arm64
+        run: GOOS=darwin GOARCH=arm64 go build -o http-request-printer-darwin-arm64 -ldflags "-X main.Version=${{ github.ref_name }}" ./cmd/hrp/main.go
+
+      # Upload the Windows amd64 binary to the GitHub release
+      - name: Upload Windows amd64 Binary to GitHub Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./http-request-printer
-          asset_name: http-request-printer-${{ github.ref_name }}
+          asset_path: ./http-request-printer-windows-amd64.exe
+          asset_name: http-request-printer-windows-amd64-${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the Windows arm64 binary to the GitHub release
+      - name: Upload Windows arm64 Binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer-windows-arm64.exe
+          asset_name: http-request-printer-windows-arm64-${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the Linux amd64 binary to the GitHub release
+      - name: Upload Linux amd64 Binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer-linux-amd64
+          asset_name: http-request-printer-linux-amd64-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the Linux arm64 binary to the GitHub release
+      - name: Upload Linux arm64 Binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer-linux-arm64
+          asset_name: http-request-printer-linux-arm64-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the macOS amd64 binary to the GitHub release
+      - name: Upload macOS amd64 Binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer-darwin-amd64
+          asset_name: http-request-printer-darwin-amd64-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the macOS arm64 binary to the GitHub release
+      - name: Upload macOS arm64 Binary to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./http-request-printer-darwin-arm64
+          asset_name: http-request-printer-darwin-arm64-${{ github.ref_name }}
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
