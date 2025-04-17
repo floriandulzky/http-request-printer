@@ -60,12 +60,17 @@ If you prefer not to build the application yourself, you can download a prebuilt
 
 1. Download the binary for your operating system.
 2. Make the binary executable:
-
    ```bash
    chmod +x http-request-printer
    ```
+3. Remove the quarantine attribute (if applicable, on macOS):
+   
+   ```bash
+   xattr -d com.apple.quarantine ./http-request-printer[version]
+   ```
+   
 
-3. Run the application:
+4. Run the application:
 
    ```bash
    ./http-request-printer
