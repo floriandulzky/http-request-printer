@@ -6,14 +6,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  checks: write
-  actions: read
-  packages: write
-  repository-projects: read
-  statuses: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,6 +44,8 @@ jobs:
           asset_path: ./http-request-printer
           asset_name: http-request-printer-${{ github.ref_name }}
           asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Upload the binary as an artifact
       - name: Upload artifact
